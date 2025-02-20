@@ -1,9 +1,13 @@
+import os
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torchvision.models as models
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
+from sklearn.utils.class_weight import compute_class_weight
 
 
 TRAIN_DIR = "data/processed/train"
@@ -11,6 +15,12 @@ VAL_DIR = "data/processed/val"
 TEST_DIR = "data/processed/test"
 
 BATCH_SIZE = 32
+
+def get_class_weights(train_dir, class_names):
+    class_counts = [len(os.listdir(os.path.join(train_dir, class_name))) for class_name in class_names]
+    class_weights = compute_class_weight("balanced", classes=np.arange(len(class_names)),
+                                         y=np.concatenate([[i] * count for i, count in enumerate(class_counts)]))
+    return torch.tensor(class_weights, dtype=torch.float32)
 
 load_transform = transforms.Compose([
     transforms.ToTensor(),
@@ -74,14 +84,18 @@ model.fc = nn.Sequential(
     nn.Linear(model.fc.in_features, num_classes)
 )
 
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+
 # scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5)
+class_weights = get_class_weights(TRAIN_DIR, train_dataset.classes)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+class_weights = class_weights.to(device)
 model = model.to(device)
 
-num_epochs = 10
+criterion = nn.CrossEntropyLoss(weight=class_weights)
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+num_epochs = 20
 for epoch in range(num_epochs):
     model.train()
     running_loss = 0.0

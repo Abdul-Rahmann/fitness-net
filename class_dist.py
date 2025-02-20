@@ -38,13 +38,13 @@ for split, counts in dataset_counts.items():
     print("\n")
 
 # Plot class distributions
-# for split, counts in dataset_counts.items():
-#     if counts:  # Ensure data exists for the split
-#         plt.figure(figsize=(8, 4))
-#         labels, values = zip(*counts.items())
-#         plt.bar(labels, values)
-#         plt.xlabel("Classes")
-#         plt.ylabel("Number of Images")
-#         plt.title(f"{split.capitalize()} Set Class Distribution")
-#         plt.xticks(rotation=45)
-#         plt.show()
+for split, counts in dataset_counts.items():
+    if counts:  # Ensure data exists for the split
+        plt.figure(figsize=(8, 4))
+        labels, values = zip(*counts.items())
+        plt.bar(labels, values)
+        plt.xlabel("Classes")
+        plt.ylabel("Number of Images")
+        plt.title(f"{split.capitalize()} Set Class Distribution")
+        plt.xticks(rotation=45)
+        plt.show()

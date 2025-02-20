@@ -1,0 +1,13 @@
+torch
+torchvision
+torch
+numpy
+pandas
+matplotlib
+seaborn
+dash==2.11.1
+Flask==2.2.3
+Werkzeug==2.2.3
+plotly
+opencv-python
+scikit-learn
