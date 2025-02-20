@@ -10,16 +10,12 @@ PROCESSED_DIR = "data/processed/"  # Base directory for saving processed subsets
 IMG_SIZE = (128, 128)  # Resize images to 128x128
 SPLIT_RATIOS = (0.7, 0.15, 0.15)  # Train, Validation, Test split ratios
 
-# Preprocessing transformations
 save_transform = transforms.Compose([
     transforms.Resize(IMG_SIZE),  # Resize the image
     transforms.ToTensor(),  # Convert the image to tensor
     transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize the image
 ])
 
-
-# Function to save images to specific folder
-# Function to save images to specific folder
 def save_subset(data_subset, subset_dir, transform):
     """
     Save a subset of images (train/val/test) into a specific directory.
@@ -55,7 +51,6 @@ def save_subset(data_subset, subset_dir, transform):
         print(f"Saved: {output_path}")
 
 
-# Main function to preprocess and save subsets
 if __name__ == "__main__":
     # Load raw dataset
     dataset = ImageFolder(RAW_DIR)
